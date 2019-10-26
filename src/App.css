@@ -31,6 +31,11 @@ body {
     background: white;
     opacity: 0.7;
     padding: 10px;
+    color: #736257;
+}
+
+p:first-child {
+    font-weight: 700;
 }
 
 .liked {
@@ -43,4 +48,20 @@ body {
 
 form * {
     margin: 5px;
+}
+
+.footer {
+    color: #736257;
+    margin-top: 30px;
+}
+
+button,
+#searchBtn {
+    cursor: pointer;
+}
+
+.footer a {
+    text-decoration: none;
+    color: #736257;
+    font-weight: 700;
 }

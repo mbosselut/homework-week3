@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Quote from "./Quote";
+import Footer from "./Footer";
 
 class QuoteSearcher extends Component {
     state = {
@@ -25,8 +26,7 @@ class QuoteSearcher extends Component {
                     quotes: quotes.map(element => {
                         return {
                             ...element,
-                            likedStatus: "neutral",
-                            searchTag: ""
+                            likedStatus: "neutral"
                         };
                     }),
                     fetching: false
@@ -105,7 +105,7 @@ class QuoteSearcher extends Component {
                             onChange={this.handleChange}
                         />
                     </label>
-                    <input type="submit" value="Search !" />
+                    <input id="searchBtn" type="submit" value="Search !" />
                 </form>
                 <h3>
                     Liked: {this.state.liked} Disliked: {this.state.disliked}
@@ -135,6 +135,7 @@ class QuoteSearcher extends Component {
                         </div>
                     );
                 })}
+                <Footer></Footer>
             </div>
         );
     }

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { identifier } from "@babel/types";
 
 class Quote extends Component {
     render() {
