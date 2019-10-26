@@ -7,25 +7,11 @@ class QuoteSearcher extends Component {
         fetching: true,
         liked: 0,
         disliked: 0,
-        searchTag: "tree"
+        searchTag: "welcome"
     };
 
     componentDidMount = () => {
         this.search();
-        // fetch("https://quote-garden.herokuapp.com/quotes/search/tree")
-        //     .then(response => response.json())
-        //     .then(response => {
-        //         this.setState({
-        //             quotes: response.results.map(element => {
-        //                 return {
-        //                     ...element,
-        //                     likedStatus: "neutral"
-        //                 };
-        //             }),
-        //             isFetching: false
-        //         });
-        //         this.likesAndDislikesCounter();
-        //     });
     };
 
     search = () => {
@@ -34,17 +20,33 @@ class QuoteSearcher extends Component {
         fetch(url)
             .then(response => response.json())
             .then(response => {
+                const quotes = this.eliminatingDuplicates(response.results);
                 this.setState({
-                    quotes: response.results.map(element => {
+                    quotes: quotes.map(element => {
                         return {
                             ...element,
-                            likedStatus: "neutral"
+                            likedStatus: "neutral",
+                            searchTag: ""
                         };
                     }),
                     fetching: false
                 });
                 this.likesAndDislikesCounter();
             });
+    };
+
+    eliminatingDuplicates = data => {
+        console.log(data);
+        const newArr = [];
+        const newArrQuotes = [];
+        data.forEach(quote => {
+            if (newArrQuotes.indexOf(quote.quoteText) === -1) {
+                newArr.push(quote);
+                newArrQuotes.push(quote.quoteText);
+            }
+        });
+        console.log(newArr);
+        return newArr;
     };
 
     likesAndDislikesCounter = () => {
@@ -66,15 +68,18 @@ class QuoteSearcher extends Component {
     };
 
     setLiked = (id, action) => {
-        // console.log(id, action);
         const quoteToUpdate = this.state.quotes.filter(
             quote => quote._id === id
         );
-        quoteToUpdate[0].likedStatus = action;
+        // Go back to neutral state if liking or disliking twice
+        if (quoteToUpdate[0].likedStatus === action) {
+            quoteToUpdate[0].likedStatus = "neutral";
+        } else {
+            quoteToUpdate[0].likedStatus = action;
+        }
         console.log(quoteToUpdate);
         this.setState(Object.assign({}, this.state.quotes, quoteToUpdate));
         this.likesAndDislikesCounter();
-        //Search for quote by id and update liked status
     };
 
     handleChange = event => {
@@ -89,7 +94,7 @@ class QuoteSearcher extends Component {
     render() {
         return (
             <div>
-                <h1>Quotes. Here are quotes.</h1>
+                <h1>Quotes. Here are some things people once said.</h1>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Search quotes :
@@ -103,10 +108,15 @@ class QuoteSearcher extends Component {
                     <input type="submit" value="Search !" />
                 </form>
                 <h3>
-                    Likes: {this.state.liked} and Disliked:{" "}
-                    {this.state.disliked}
+                    Liked: {this.state.liked} Disliked: {this.state.disliked}
                 </h3>
-                {this.state.fetching && <h3>Loading...</h3>}
+                {/* Displaying loading message while fetching */}
+                {this.state.fetching && (
+                    <h3>
+                        <em>Loading...</em>
+                    </h3>
+                )}
+                {/* Displaying error if no quote found */}
                 {this.state.quotes.length === 0 && !this.state.fetching && (
                     <h3>Sorry ! We did not find quotes for that search.</h3>
                 )}
